@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Controller\Api\v1;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
