@@ -14,6 +14,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UrlController extends AbstractFOSRestController
 {
+    //TODO - Llevar esto a ShortUrlService para quitar peso del controlador al servicio
+    private $em;
+    private $ser;
+
+    public function __construct(ManagerRegistry $doctrine, SerializerInterface $serializer)
+    {
+        $this->em = $doctrine->getManager();
+        $this->serializer = $serializer;
+    }
+
     /**
      * Lists all Urls.
      *
@@ -21,13 +31,13 @@ class UrlController extends AbstractFOSRestController
      *
      *@return Response
      */
-    public function getUrlsAction(ManagerRegistry $doctrine, SerializerInterface $serializer)
+    public function getUrlsAction()
     {
-        $repository = $doctrine->getRepository(Url::class);
+        $repository = $this->em->getRepository(Url::class);
         $urls = $repository->findAll();
 
         //TODO - Añadir filtros (ver docu Doctrine y ElasticSearch)
-        return new Response($serializer->serialize($urls, 'json'));
+        return new Response($this->serializer->serialize($urls, 'json'));
     }
 
     /**
@@ -35,12 +45,10 @@ class UrlController extends AbstractFOSRestController
      *
      *@Rest\Post("/urls")
      *
-     *@return Response
+     *@return JsonResponse
      */
-    public function postUrlsAction(ManagerRegistry $doctrine, ShortUrlService $shortUrlService, Request $request)
+    public function postUrlsAction(ShortUrlService $shortUrlService, Request $request)
     {
-        $entityManager = $doctrine->getManager();
-
         $url = new Url();
 
         //TODO - Validar request (formato y existencia del parámetro originalUrl)
@@ -49,10 +57,34 @@ class UrlController extends AbstractFOSRestController
         $shortUrl = $shortUrlService->shorten_url();
         $url->setShortUrl($shortUrl);
 
-        $entityManager->persist($url);
-        $entityManager->flush();
+        $this->em->persist($url);
+        $this->em->flush();
 
         //TODO - Devolver error si la inserción falla (añadir manejo de excepciones con try/catch)
         return new JsonResponse(['status' => 'ok', 'id' => $url->getId()]);
+    }
+
+    /**
+     * Create Url.
+     *
+     *@Rest\Delete("/urls/{id}")
+     *
+     *@return Response
+     */
+    public function deleteUrlsAction(int $id)
+    {
+        $url = $this->em->getRepository(Url::class)->find($id);
+
+        if (!$url) {
+            throw $this->createNotFoundException(
+                'No url found  with id '.$id
+            );
+        }
+
+        $this->em->remove($url);
+        $this->em->flush();
+
+        //TODO - Mejorar manejo de excepciones con try/catch (devolver como json)
+        return new JsonResponse(['status' => 'ok', 'message' => 'Deleted url with id '.$id]);
     }
 }
