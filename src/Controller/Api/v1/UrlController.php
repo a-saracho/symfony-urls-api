@@ -3,6 +3,7 @@
 namespace App\Controller\Api\v1;
 
 use App\Entity\Url;
+use App\Service\ShortUrlService;
 use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class UrlController extends AbstractFOSRestController
 {
     /**
-     *Lists all Urls.
+     * Lists all Urls.
      *
      *@Rest\Get("/urls")
      *
@@ -30,21 +31,21 @@ class UrlController extends AbstractFOSRestController
     }
 
     /**
-     *Create Url.
+     * Create Url.
      *
      *@Rest\Post("/urls")
      *
      *@return Response
      */
-    public function postUrlsAction(ManagerRegistry $doctrine, Request $request)
+    public function postUrlsAction(ManagerRegistry $doctrine, ShortUrlService $shortUrlSsercvice, Request $request)
     {
         $entityManager = $doctrine->getManager();
 
         $url = new Url();
         //TODO - Validar request
         $url->setOriginalUrl($request->request->get('originalUrl'));
-        //Todo - Generar shortUrl fuera del controlador y de forma más elegante (chequear que son únicas)
-        $shortUrl = substr(str_shuffle(preg_replace('/[\W]/', '', $request->request->get('originalUrl'))), 0, 8);
+        //TODO - Comprobar que no exista ya la url en la BBDD
+        $shortUrl = $shortUrlSsercvice->shorten_url();
         $url->setShortUrl($shortUrl);
 
         $entityManager->persist($url);
