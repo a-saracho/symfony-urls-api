@@ -2,6 +2,11 @@ controllers:
     resource: ../src/Controller/
     type: annotation
 
+controllers_v1:
+    resource: ../src/Controller/Api/v1
+    type: annotation
+    prefix: '/v1'
+
 kernel:
     resource: ../src/Kernel.php
     type: annotation
