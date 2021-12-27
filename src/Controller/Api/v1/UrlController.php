@@ -24,9 +24,9 @@ class UrlController extends AbstractFOSRestController
     public function getUrlsAction(ManagerRegistry $doctrine, SerializerInterface $serializer)
     {
         $repository = $doctrine->getRepository(Url::class);
-        $urls = $repository->findall();
+        $urls = $repository->findAll();
 
-        //TODO - Añadir filtros
+        //TODO - Añadir filtros (ver docu Doctrine y ElasticSearch)
         return new Response($serializer->serialize($urls, 'json'));
     }
 
@@ -37,21 +37,22 @@ class UrlController extends AbstractFOSRestController
      *
      *@return Response
      */
-    public function postUrlsAction(ManagerRegistry $doctrine, ShortUrlService $shortUrlSsercvice, Request $request)
+    public function postUrlsAction(ManagerRegistry $doctrine, ShortUrlService $shortUrlService, Request $request)
     {
         $entityManager = $doctrine->getManager();
 
         $url = new Url();
-        //TODO - Validar request
-        $url->setOriginalUrl($request->request->get('originalUrl'));
-        //TODO - Comprobar que no exista ya la url en la BBDD
-        $shortUrl = $shortUrlSsercvice->shorten_url();
+
+        //TODO - Validar request (formato y existencia del parámetro originalUrl)
+        $url->setOriginalUrl($request->get('originalUrl'));
+        //TODO - Comprobar que no exista ya la url en la BBDD, si existe buscarla y devolver shortUrl
+        $shortUrl = $shortUrlService->shorten_url();
         $url->setShortUrl($shortUrl);
 
         $entityManager->persist($url);
         $entityManager->flush();
 
-        //TODO - Devolver error si la inserción falla
+        //TODO - Devolver error si la inserción falla (añadir manejo de excepciones con try/catch)
         return new JsonResponse(['status' => 'ok', 'id' => $url->getId()]);
     }
 }
