@@ -43,8 +43,8 @@ class UrlController extends AbstractFOSRestController
         $url = new Url();
         //TODO - Validar request
         $url->setOriginalUrl($request->request->get('originalUrl'));
-        //Todo - Generar shortUrl fuera del controlador y de forma más elegante
-        $shortUrl = substr(str_shuffle($request->request->get('originalUrl')), 0, 8);
+        //Todo - Generar shortUrl fuera del controlador y de forma más elegante (chequear que son únicas)
+        $shortUrl = substr(str_shuffle(preg_replace('/[\W]/', '', $request->request->get('originalUrl'))), 0, 8);
         $url->setShortUrl($shortUrl);
 
         $entityManager->persist($url);
