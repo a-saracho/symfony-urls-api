@@ -16,7 +16,7 @@ class UrlController extends AbstractFOSRestController
 {
     //TODO - Llevar esto a ShortUrlService para quitar peso del controlador al servicio
     private $em;
-    private $ser;
+    private $serializer;
 
     public function __construct(ManagerRegistry $doctrine, SerializerInterface $serializer)
     {
