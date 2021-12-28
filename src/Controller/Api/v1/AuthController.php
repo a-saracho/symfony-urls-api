@@ -1,8 +1,9 @@
 <?php
 
 /*
-* Código a partir de
+* Código a partir de ejemplo de
 * https://h-benkachoud.medium.com/
+* TODO - Mejorar implementacion mediante FOSUserBundle
 */
 
 namespace App\Controller\Api\v1;

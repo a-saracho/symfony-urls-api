@@ -24,6 +24,8 @@ class UrlController extends AbstractFOSRestController
         $this->serializer = $serializer;
     }
 
+    //TODO - Recibir todos los parametros en formato json
+
     /**
      * Lists all Urls.
      *
@@ -36,7 +38,7 @@ class UrlController extends AbstractFOSRestController
         $repository = $this->em->getRepository(Url::class);
         $urls = $repository->findAll();
 
-        //TODO - Añadir filtros (ver docu Doctrine y ElasticSearch)
+        //TODO - Añadir filtros (ver documentación Doctrine y ElasticSearch)
         return new Response($this->serializer->serialize($urls, 'json'));
     }
 
@@ -51,7 +53,7 @@ class UrlController extends AbstractFOSRestController
     {
         $url = new Url();
 
-        //TODO - Validar request (formato y existencia del parámetro originalUrl)
+        //TODO - Validar request (formato válido del parámetro originalUrl)
         $url->setOriginalUrl($request->get('originalUrl'));
         //TODO - Comprobar que no exista ya la url en la BBDD, si existe buscarla y devolver shortUrl
         $shortUrl = $shortUrlService->shorten_url();

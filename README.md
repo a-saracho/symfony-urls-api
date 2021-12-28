@@ -1,6 +1,17 @@
 # Prueba Técnica API
 
-Api Rest implementada en [Symfony](https://symfony.com) para prueba técnica de desarrollador Backend PHP. 
+Api Rest implementada en [Symfony](https://symfony.com) con base de datos SQLite para prueba técnica de desarrollador Backend PHP. 
+
+
+## Instalación
+
+Requisitos previos: Requiere PHP ^8.0, Composer y Symfony 6
+
+* Clonar el repository desde github.
+* Instalar las dependencias mediante `composer install`
+* Ejecutar las migraciones mediante `php bin/console doctrine:migrations:migrate`
+* Iniciar symfony mediante `symfony server:start`
+
 
 ## REST-API Endpoints
 
@@ -10,7 +21,7 @@ Listado de endpoints de la api (v1):
 
 **Endpoint:** `[POST] v1/urls`
 
-**Request:**
+**Params:**
 * _originalUrl_ - Url para acortar.
 
 **Response:**
@@ -18,8 +29,7 @@ Listado de endpoints de la api (v1):
 
 **Ejemplo**
 
-	# request ==>
-	{ "originalUrl": "https://wordpress.org/" }
+	# request ==> /v1/urls?originalUrl=https://www.google.es/
 
 	# <== response
 	{ "shortUrl": "1234567890" }
@@ -29,7 +39,7 @@ Listado de endpoints de la api (v1):
 
 **Endpoint:** `[GET] v1/urls`
 
-**Request:**
+**Params:**
 
 * Sin parámetros por el momento.
 
@@ -42,7 +52,7 @@ Listado de endpoints de la api (v1):
 
 **Endpoint:** `[GET] /v1/short-url/{shortUrl}`
 
-**Request:**
+**Params:**
 * _shortUrl_ - Código de la url acortada.
 
 **Response:**
@@ -50,8 +60,7 @@ Listado de endpoints de la api (v1):
 
 **Ejemplo**
 
-	# request ==>
-	{ "shortUrl": "1234567890" }
+	# request ==> /v1/short-url/pgesswgw
 
 	# <== response
 	{ "originalUrl": "https://wordpress.org/" }
@@ -63,7 +72,7 @@ Listado de endpoints de la api (v1):
 
 Importante: Requiere token de autenticación JWT suministrado en el Header
 
-**Request:**
+**Params:**
 * _id_ - Id de la url a eliminar.
 
 **Response:**
@@ -71,8 +80,7 @@ Importante: Requiere token de autenticación JWT suministrado en el Header
 
 **Ejemplo**
 
-	# request ==>
-	{ "id": "2" }
+	# request ==> /v1/urls/2
 
 	# <== response
 	{ "message": "Deleted url with id 2" }
@@ -82,7 +90,7 @@ Importante: Requiere token de autenticación JWT suministrado en el Header
 
 **Endpoint:** `[POST] /v1/register`
 
-**Request:**
+**Params:**
 * _email_ - Email para el nuevo usuario.
 * _password_ - Password para el nuevo usuario.
 
@@ -91,8 +99,7 @@ Importante: Requiere token de autenticación JWT suministrado en el Header
 
 **Ejemplo**
 
-	# request ==>
-	{ "email": "test@test.com" , "password" : "password" }
+	# request ==> /v1/register?email=test@test.com&password=password
 
 	# <== response
 	{ "message": "User successfully created" }
@@ -111,7 +118,7 @@ Importante: Requiere token de autenticación JWT suministrado en el Header
 
 **Ejemplo**
 
-	# request ==>
+	# request ==> /v1/login
 	{ "email": "test@test.com" , "password" : "password" }
 
 	# <== response
@@ -124,7 +131,6 @@ Contiene los siguientes bundles:
 * [symfony/orm-pack](https://symfony.com/doc/current/doctrine.html)
 * [symfony/security-bundle](https://symfony.com/doc/current/security.html)
 * [symfony/validator](https://symfony.com/doc/current/validation.html)
-* [symfony/form](https://symfony.com/doc/current/forms.html)
 * [symfony/form](https://symfony.com/doc/current/forms.html)
 * [symfony/var-dump](https://symfony.com/doc/current/components/var_dumper.html)
 * [FOS/RestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle)

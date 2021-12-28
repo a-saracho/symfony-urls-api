@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Código a partir de
+* Código a partir de ejemplo
 * https://h-benkachoud.medium.com/
 */
 
