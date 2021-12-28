@@ -7,6 +7,9 @@ controllers_v1:
     type: annotation
     prefix: '/v1'
 
+api_login_check:
+    path: /v1/login
+
 kernel:
     resource: ../src/Kernel.php
     type: annotation
